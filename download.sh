@@ -34,7 +34,7 @@ echo "Downloading driver..."
 
 
 ## latest release
-if [ "$version" = "latest release \"$latest_release_stable\"" ]; then
+if [ -n "$version" ]; then
     # download latest release
     url=$(curl -s https://api.github.com/repos/dominikandreas/venus-modbus-proxy/releases/latest | grep "zipball_url" | sed -n 's/.*"zipball_url": "\([^"]*\)".*/\1/p')
 fi
