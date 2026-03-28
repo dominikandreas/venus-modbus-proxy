@@ -1,6 +1,6 @@
 # Modbus-Proxy
 
-A Venus-OS integration to run [modbus-proxy-rs](https://github.com/dominikandreas/modbus-proxy-rs).
+A Venus-OS integration to run [modbus-proxy-rs](https://github.com/dominikandreas/modbus-proxy-rs), a Modbus TCP layer 7 reverse proxy. It lets multiple clients talk to Modbus devices that only support a single client, or a very small number of concurrent clients.
 
 ## Index
 
@@ -13,11 +13,7 @@ A Venus-OS integration to run [modbus-proxy-rs](https://github.com/dominikandrea
   - [Restart / Uninstall](#restart--uninstall)
   - [Debugging](#debugging)
   - [Compatibility](#compatibility)
-  - [Supporting/Sponsoring this project](#supportingsponsoring-this-project)
 
-## Disclaimer
-
-I wrote this script for myself. I'm not responsible, if you damage something using my script.
 
 ## Config
 
@@ -49,12 +45,6 @@ Edit the config.yaml and change the defaults as required.
     bash /data/etc/modbus-proxy/install.sh
     ```
 
-    - If you entered `2` during installation:
-
-    ```bash
-    bash /data/etc/modbus-proxy-2/install.sh
-    ```
-
     The daemon-tools should start this service automatically within seconds.
 
 ## Restart / Uninstall
@@ -83,4 +73,8 @@ If the script stops with the message `dbus.exceptions.NameExistsException: Bus n
 
 ## Compatibility
 
-This software was only tested on Venus OS 20250915120900. It will likely also work on others versions.
+This software was only tested on Venus OS 20250915, but should work on other versions too.
+
+## Disclaimer
+
+No warranties, use at your own risk. 
