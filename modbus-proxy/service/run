@@ -1,0 +1,4 @@
+#!/bin/sh
+echo "*** starting the modbus-proxy service ***"
+exec 2>&1
+exec /data/etc/modbus-proxy/modbus-proxy --config /data/etc/modbus-proxy/config.ini
