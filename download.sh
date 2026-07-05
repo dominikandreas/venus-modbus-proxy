@@ -8,17 +8,6 @@ proxy_archive="modbus-proxy-rs-armv7-unknown-linux-gnueabihf.tar.gz"
 echo ""
 echo ""
 
-# fetch version numbers for different versions
-echo -n "Fetch current version numbers..."
-
-version=$(curl -s https://api.github.com/repos/dominikandreas/venus-modbus-proxy/releases/latest | grep "tag_name" | cut -d : -f 2,3 | tr -d "\ " | tr -d \" | tr -d \,)
-
-echo
-
-echo "> Selected: $version"
-echo ""
-
-
 echo ""
 if [ -d ${driver_path}/${driver_name} ]; then
     echo "Updating driver '$driver_name' as '$driver_name'..."
@@ -35,11 +24,7 @@ echo ""
 echo "Downloading driver..."
 
 
-## latest release
-if [ -n "$version" ]; then
-    # download latest release
-    url=$(curl -s https://api.github.com/repos/dominikandreas/venus-modbus-proxy/releases/latest | grep "zipball_url" | sed -n 's/.*"zipball_url": "\([^"]*\)".*/\1/p')
-fi
+url="https://github.com/dominikandreas/venus-modbus-proxy/archive/refs/heads/master.zip"
 
 binary_url="https://github.com/dominikandreas/modbus-proxy-rs/releases/download/${proxy_release_tag}/${proxy_archive}"
 
