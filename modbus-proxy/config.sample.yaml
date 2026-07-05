@@ -1,5 +1,6 @@
 devices:
 - modbus:
     url: plc1.acme.org:502     # device url (mandatory)
+    connect_delay_ms: 0        # optional delay after backend connect before first request
   listen:
     bind: 0.0.0.0:9000         # listening address (mandatory)

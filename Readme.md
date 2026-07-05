@@ -19,6 +19,18 @@ A Venus-OS integration to run [modbus-proxy-rs](https://github.com/dominikandrea
 
 Edit the config.yaml and change the defaults as required.
 
+For Huawei SUN2000 dongles that accept TCP connections before Modbus is ready,
+add a backend connect delay:
+
+```yaml
+devices:
+- modbus:
+    url: 192.168.200.1:6607
+    connect_delay_ms: 2000
+  listen:
+    bind: 0.0.0.0:6607
+```
+
 ## Install / Update
 
 1. Login to your Venus OS device via SSH. See [Venus OS:Root Access](https://www.victronenergy.com/live/ccgx:root_access#root_access) for more details.

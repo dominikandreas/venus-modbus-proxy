@@ -2,6 +2,8 @@
 
 driver_path="/data/etc"
 driver_name="modbus-proxy"
+proxy_release_tag="main-83d841d"
+proxy_archive="modbus-proxy-rs-armv7-unknown-linux-gnueabihf.tar.gz"
 
 echo ""
 echo ""
@@ -39,7 +41,7 @@ if [ -n "$version" ]; then
     url=$(curl -s https://api.github.com/repos/dominikandreas/venus-modbus-proxy/releases/latest | grep "zipball_url" | sed -n 's/.*"zipball_url": "\([^"]*\)".*/\1/p')
 fi
 
-binary_url=https://github.com/dominikandreas/modbus-proxy-rs/releases/download/main-4bd745e/modbus-proxy-rs-armv7l-linux
+binary_url="https://github.com/dominikandreas/modbus-proxy-rs/releases/download/${proxy_release_tag}/${proxy_archive}"
 
 echo "Downloading from: $url"
 wget -O /tmp/venus-modbus-proxy.zip "$url"
@@ -84,13 +86,10 @@ fi
 # If updating: cleanup existing driver
 if [ -d ${driver_path}/${driver_name} ]; then
     echo ""
-    # get confirmation from user
-    read -p "Do you want to remove the existing driver files? [y/N]: " remove_driver
-    if [ "$remove_driver" != "y" ] && [ "$remove_driver" != "Y" ]; then
-        echo "Exiting..."
-        exit 0
+    echo "Backing up existing config and cleaning up existing driver..."
+    if [ -f ${driver_path}/${driver_name}/config.yaml ]; then
+        cp ${driver_path}/${driver_name}/config.yaml /tmp/${driver_name}.config.yaml
     fi
-    echo "Cleaning up existing driver..."
     rm -rf ${driver_path:?}/${driver_name}
 fi
 
@@ -109,10 +108,10 @@ rm -rf /tmp/venus-modbus-proxy-master
 
 
 # If updating: restore existing config file
-if [ -f ${driver_path}/${driver_name}_config.ini ]; then
+if [ -f /tmp/${driver_name}.config.yaml ]; then
     echo ""
     echo "Restoring existing config file..."
-    mv ${driver_path}/${driver_name}_config.ini ${driver_path}/${driver_name}/config.ini
+    mv /tmp/${driver_name}.config.yaml ${driver_path}/${driver_name}/config.yaml
 fi
 
 
@@ -126,20 +125,25 @@ chmod 755 ${driver_path}/${driver_name}/uninstall.sh
 chmod 755 ${driver_path}/${driver_name}/service/run
 chmod 755 ${driver_path}/${driver_name}/service/log/run
 
-wget -O ${driver_path}/${driver_name}/modbus-proxy $binary_url
+echo ""
+echo "Downloading modbus-proxy-rs ${proxy_release_tag}..."
+wget -O /tmp/${proxy_archive} "$binary_url"
+tar -xzf /tmp/${proxy_archive} -C /tmp
+cp /tmp/modbus-proxy-rs-armv7-unknown-linux-gnueabihf/modbus-proxy-rs ${driver_path}/${driver_name}/modbus-proxy
 chmod 755 ${driver_path}/${driver_name}/modbus-proxy
+rm -rf /tmp/${proxy_archive} /tmp/modbus-proxy-rs-armv7-unknown-linux-gnueabihf
 
 
 # copy default config file
-if [ ! -f ${driver_path}/${driver_name}/config.ini ]; then
+if [ ! -f ${driver_path}/${driver_name}/config.yaml ]; then
     echo ""
     echo ""
     echo "First installation detected. Copying default config file..."
     echo ""
     echo "** Do not forget to edit the config file with your settings! **"
     echo "You can edit the config file with the following command:"
-    echo "nano ${driver_path}/${driver_name}/config.ini"
-    cp ${driver_path}/${driver_name}/config.sample.ini ${driver_path}/${driver_name}/config.ini
+    echo "nano ${driver_path}/${driver_name}/config.yaml"
+    cp ${driver_path}/${driver_name}/config.sample.yaml ${driver_path}/${driver_name}/config.yaml
     echo ""
     echo "** Execute the install.sh script after you have edited the config file! **"
     echo "You can execute the install.sh script with the following command:"
